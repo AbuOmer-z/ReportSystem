@@ -1,0 +1,9 @@
+<report>
+    <id>2</id>
+    <process_id>200</process_id>
+    <type>Purchase_Order</type>
+    <department>Purchasing</department>
+    <authorId>60</authorId>
+    <title>Order Placed with Supplier X</title>
+    <content>Ordered 5 tons. Delivery expected Tuesday.</content>
+</report>

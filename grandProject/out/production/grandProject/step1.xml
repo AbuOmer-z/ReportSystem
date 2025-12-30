@@ -1,0 +1,9 @@
+<report>
+    <id>1</id>
+    <process_id>200</process_id>
+    <type>Purchase_Requisition</type>
+    <department>Warehouse</department>
+    <authorId>50</authorId>
+    <title>Need more Corn</title>
+    <content>Stock is low. Requesting 5 tons of corn.</content>
+</report>

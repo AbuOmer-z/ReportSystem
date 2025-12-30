@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><processes>
+    <process>
+    <name>Procurment</name>
+    <step>Purchase_Requisition</step>
+    <step>Purchase_Order</step>
+    <step>Order_Received</step>
+    </process>
+    <process>
+    <name>Production</name>
+    <step>Mix_Ingredients</step>
+    <step>Bake_Product</step>
+    <step>Quality_Check</step>
+    </process>
+  <process><name>fix Engine</name><step>send expert</step><step>detirmine requirements</step><step>set workers on it</step><step>test it</step></process><process><name>dgsd</name><step>asd</step><step>fs</step></process></processes>

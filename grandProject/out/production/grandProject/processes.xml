@@ -1,0 +1,14 @@
+<processes>
+    <process>
+    <name>Procurment</name>
+    <step>Purchase_Requisition</step>
+    <step>Purchase_Order</step>
+    <step>Order_Received</step>
+    </process>
+    <process>
+    <name>Production</name>
+    <step>Mix_Ingredients</step>
+    <step>Bake_Product</step>
+    <step>Quality_Check</step>
+    </process>
+  </processes>
