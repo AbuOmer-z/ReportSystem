@@ -1,97 +1,60 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProcessAnalyzer {
 
-    // CHANGE: This now returns a String instead of void
-   // ... imports ...
+    public List<ProcessStatus> getTableData(List<Report> allReports, List<ProcessDefinition> rules) {
+        List<ProcessStatus> results = new ArrayList<>();
 
-    // NEW METHOD: Returns structured data for the GUI Table
-    public List<ProcessStatus> getTableData(List<Report> reports, List<ProcessDefinition> rules) {
-        List<ProcessStatus> tableRows = new ArrayList<>();
-        
-        // 1. Group reports (same as before)
-        Map<Integer, List<Report>> groupedReports = new HashMap<>();
-        for (Report r : reports) {
-            int pid = r.getProcessId();
-            if (!groupedReports.containsKey(pid)) groupedReports.put(pid, new ArrayList<>());
-            groupedReports.get(pid).add(r);
+        // 1. Group all reports by their Process ID
+        Map<Integer, List<Report>> reportsByProject = new HashMap<>();
+        for (Report r : allReports) {
+            reportsByProject.computeIfAbsent(r.getProcessId(), k -> new ArrayList<>()).add(r);
         }
 
-        // 2. Analyze each group
-        for (Integer pid : groupedReports.keySet()) {
-            List<Report> currentReports = groupedReports.get(pid);
-            ProcessDefinition matchingRule = findMatchingRule(currentReports, rules);
+        // 2. Loop through every Project ID found in your reports
+        for (Integer pid : reportsByProject.keySet()) {
+            List<Report> projectReports = reportsByProject.get(pid);
+            
+            // 3. Find which blueprint this project belongs to
+            ProcessDefinition blueprint = findBlueprintForProject(projectReports, rules);
 
-            if (matchingRule != null) {
-                // Calculate stats
-                int total = matchingRule.getSteps().size();
-                int found = 0;
+            if (blueprint != null) {
+                int totalSteps = blueprint.getSteps().size();
+                int doneCount = 0;
                 List<String> missing = new ArrayList<>();
 
-                for (String stepName : matchingRule.getSteps()) {
-                    boolean stepExists = false;
-                    for (Report r : currentReports) {
+                // 4. THE PROOF: Does a report exist for each specific step?
+                for (String stepName : blueprint.getSteps()) {
+                    boolean isDone = false;
+                    for (Report r : projectReports) {
                         if (r.getReportType().equalsIgnoreCase(stepName)) {
-                            stepExists = true;
+                            isDone = true;
                             break;
                         }
                     }
-                    if (stepExists) found++;
+                    
+                    if (isDone) doneCount++;
                     else missing.add(stepName);
                 }
 
-                String status = (found == total) ? "COMPLETE" : "IN PROGRESS";
-                
-                // Add to our list
-                tableRows.add(new ProcessStatus(pid, matchingRule.getProcessName(), found, total, status, missing));
+                String status = (doneCount == totalSteps) ? "OPERATIONAL" : "IN PROGRESS";
+                results.add(new ProcessStatus(pid, blueprint.getProcessName(), doneCount, totalSteps, status, missing));
             }
         }
-        return tableRows;
+        return results;
     }
 
-    // ... keep your helper methods (findMatchingRule) ...
-
-    private ProcessDefinition findMatchingRule(List<Report> reports, List<ProcessDefinition> rules) {
-        if (reports == null || reports.isEmpty()) return null;
-        String sampleType = reports.get(0).getReportType();
-        for (ProcessDefinition rule : rules) {
-            if (rule.hasStep(sampleType)) return rule;
-        }
-        return null;
-    }
-
-    // CHANGE: This now returns a String line instead of printing
-    private String evaluateRule(int pid, List<Report> reports, ProcessDefinition rule) {
-        List<String> requiredSteps = rule.getSteps();
-        int stepsFoundCount = 0;
-        List<String> missingSteps = new ArrayList<>();
-
-        for (String stepName : requiredSteps) {
-            boolean found = false;
-            for (Report r : reports) {
-                if (r.getReportType() != null && r.getReportType().equalsIgnoreCase(stepName)) {
-                    found = true;
-                    break;
+    private ProcessDefinition findBlueprintForProject(List<Report> reports, List<ProcessDefinition> rules) {
+        for (Report r : reports) {
+            for (ProcessDefinition rule : rules) {
+                if (rule.hasStep(r.getReportType())) {
+                    return rule;
                 }
             }
-            if (found) stepsFoundCount++;
-            else missingSteps.add(stepName);
+            // --- DEBUG LINE START ---
+            System.out.println("DEBUG: Found report type '" + r.getReportType() + "' but no Blueprint matches it!");
+            // --- DEBUG LINE END ---
         }
-
-        String status = (stepsFoundCount == requiredSteps.size()) ? "[COMPLETE]" : "[IN PROGRESS]";
-        String result = "Process #" + pid + " (" + rule.getProcessName() + "): " + status;
-        
-        if (!missingSteps.isEmpty()) {
-            result += " -> Waiting for: " + missingSteps;
-        }
-        return result;
-    }
-
-    public String getAnalysisReport(List<Report> allReports, List<ProcessDefinition> rules) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAnalysisReport'");
+        return null;
     }
 }
