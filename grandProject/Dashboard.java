@@ -68,27 +68,23 @@ public class Dashboard extends JFrame {
     }
 
     public void refreshData() {
-        // A. Reload Data
-        system = new ReportingSystem();
-        system.loadReportsFromFolder("reports"); // Make sure this matches your folder name!
-        // NOTE: If you haven't moved files yet, use "." instead of "reports"
+    system = new ReportingSystem();
+    
+    // Switch between "." or "reports" depending on where your files are
+    system.loadReportsFromFolder("."); 
+    
+    List<ProcessStatus> rows = analyzer.getTableData(system.getAllReports(), rules);
+    tableModel.setRowCount(0);
 
-        // B. Analyze Data
-        List<ProcessStatus> rows = analyzer.getTableData(system.getAllReports(), rules);
-
-        // C. Clear Table
-        tableModel.setRowCount(0);
-
-        // D. Fill Table
-        for (ProcessStatus row : rows) {
-            Object[] data = {
-                row.processId,
-                row.processName,
-                row.completedSteps + " / " + row.totalSteps,
-                row.currentStatus,
-                row.waitingFor
-            };
-            tableModel.addRow(data);
-        }
+    for (ProcessStatus row : rows) {
+        Object[] data = {
+            row.processId,
+            row.processName,
+            row.completedSteps + " / " + row.totalSteps,
+            row.currentStatus,
+            row.waitingFor
+        };
+        tableModel.addRow(data);
     }
+}
 }
