@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><processes>
+
+    <process>
+
+    <name>
+    Procurment</name>
+
+    <step>
+    Purchase_Requisition</step>
+
+    <step>
+    Purchase_Order</step>
+
+    <step>
+    Order_Received</step>
+
+    </process>
+
+    <process>
+
+    <name>
+    Production</name>
+
+    <step>
+    Mix_Ingredients</step>
+
+    <step>
+    Bake_Product</step>
+
+    <step>
+    Quality_Check</step>
+
+    </process>
+
+  <process>
+  <name>
+  fix Engine</name>
+  <step>
+  send expert</step>
+  <step>
+  detirmine requirements</step>
+  <step>
+  set workers on it</step>
+  <step>
+  test it</step>
+  </process>
+  <process>
+  <name>
+  dgsd</name>
+  <step>
+  asd</step>
+  <step>
+  fs</step>
+  </process>
+  <process>
+  <name>Repair</name>
+  <step>
+  Fix</step>
+  <step>
+  Test</step>
+  </process>
+  <process><name>sale</name><step>detrmine goods</step><step>set to ship</step><step>sale</step></process><process><name>newTest</name><step>one</step><step>two</step><step>three</step></process><process><name>almothna</name><step>r</step><step>t</step></process><process><name>test1</name><step>one</step><step>two</step></process><process><name>Process name</name><step>step 1</step><step>step 2</step><step>step 3</step><step>step 4</step></process></processes>
